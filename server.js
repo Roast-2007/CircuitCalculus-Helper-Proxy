@@ -220,7 +220,7 @@ app.post("/v1/chat/completions", authMiddleware, (req, res) => {
           const parsed = JSON.parse(errBody);
           errorMsg = parsed?.error?.message || parsed?.message || parsed?.detail || errorMsg;
         } catch {}
-        res.status(upstreamRes.status).json({ error: errorMsg });
+        res.status(upstreamRes.status).json({ error: { message: errorMsg }, message: errorMsg });
         return;
       }
 
