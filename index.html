@@ -388,39 +388,6 @@
       font-weight: 900;
     }
 
-    .notes {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 58px;
-    }
-
-    .note {
-      min-height: 132px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: 22px;
-      background: var(--panel);
-      box-shadow: 0 18px 50px rgba(14, 36, 29, 0.08);
-      backdrop-filter: blur(18px);
-    }
-
-    .note b {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--green-dark);
-      font-family: "Trebuchet MS", "Noto Sans SC", sans-serif;
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .note span {
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.65;
-    }
-
     footer {
       margin-top: 42px;
       color: rgba(97, 114, 106, 0.78);
@@ -435,7 +402,6 @@
       .hero { grid-template-columns: 1fr; }
       .phone-card { min-height: auto; padding: 12px 0 2px; }
       .orbit { right: 50%; transform: translateX(50%); }
-      .notes { grid-template-columns: 1fr; margin-top: 36px; }
     }
 
     @media (max-width: 520px) {
@@ -483,12 +449,6 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <section class="notes" aria-label="安装说明">
-      <div class="note"><b>一步下载</b><span>点击主按钮下载根目录下唯一的最新版 APK，无需选择历史版本。</span></div>
-      <div class="note"><b>本地安装</b><span>Android 首次安装可能需要允许浏览器安装未知来源应用。</span></div>
-      <div class="note"><b>更新方式</b><span>App 设置页可以检查更新，发现新版后会打开浏览器访问本页面。</span></div>
     </section>
 
     <footer>MIT License · CircuitCalculus Helper</footer>
