@@ -1,3 +1,4 @@
 .env
 proxy.db
 node_modules/
+.idea
