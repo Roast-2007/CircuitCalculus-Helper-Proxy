@@ -75,6 +75,7 @@ pm2 save
 | 端点 | 方法 | 说明 |
 |------|------|------|
 | `/v1/auth/login` | POST | 学生登录，返回 JWT |
+| `/v1/app/version` | GET | 查询 App 最新版本（无需 JWT） |
 | `/v1/chat/completions` | POST | 代理 API 请求（需 JWT + `x-provider` header） |
 | `/health` | GET | 健康检查 |
 
@@ -85,6 +86,14 @@ curl -X POST http://localhost:3000/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"name":"张三","studentId":"42506453","verificationCode":"1234"}'
 ```
+
+### 版本查询
+
+```bash
+curl "http://localhost:3000/v1/app/version?platform=android"
+```
+
+服务端通过 `.env` 中的 `APP_ANDROID_VERSION`、`APP_ANDROID_VERSION_CODE`、`APP_ANDROID_DOWNLOAD_URL`、`APP_ANDROID_APK_PATH` 和 `APP_ANDROID_CHANGELOG` 返回最新版信息。下载页地址由部署环境填写；APK 文件保持根目录只放最新版一份。
 
 ### 代理请求
 

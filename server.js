@@ -15,6 +15,13 @@ const SILICONFLOW_KEY = process.env.SILICONFLOW_KEY || "";
 const DEEPSEEK_KEY = process.env.DEEPSEEK_KEY || "";
 const ALIBABA_BAILIAN_KEY = process.env.ALIBABA_BAILIAN_KEY || "";
 
+const APP_ANDROID_VERSION = process.env.APP_ANDROID_VERSION || "1.0.1";
+const APP_ANDROID_VERSION_CODE = parseInt(process.env.APP_ANDROID_VERSION_CODE || "2", 10);
+const APP_ANDROID_MIN_SUPPORTED_VERSION = process.env.APP_ANDROID_MIN_SUPPORTED_VERSION || "1.0.0";
+const APP_ANDROID_DOWNLOAD_URL = process.env.APP_ANDROID_DOWNLOAD_URL || "";
+const APP_ANDROID_APK_PATH = process.env.APP_ANDROID_APK_PATH || "ocr-math-latest.apk";
+const APP_ANDROID_CHANGELOG = process.env.APP_ANDROID_CHANGELOG || "";
+
 if (!JWT_SECRET || JWT_SECRET === "change-me-to-a-random-string") {
   console.warn("WARNING: JWT_SECRET is not set or using default value. Generate a random secret.");
 }
@@ -73,6 +80,17 @@ function normalizeUrl(url) {
 
 function respondError(res, status, message) {
   return res.status(status).json({ error: message });
+}
+
+function parseChangelog(raw) {
+  return raw
+    .split("|")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function getAndroidVersionCode() {
+  return Number.isFinite(APP_ANDROID_VERSION_CODE) ? APP_ANDROID_VERSION_CODE : 2;
 }
 
 // Rate limiting
@@ -135,6 +153,26 @@ function authMiddleware(req, res, next) {
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", studentsDb: !!studentsDb });
+});
+
+app.get("/v1/app/version", (req, res) => {
+  const platform = typeof req.query.platform === "string" ? req.query.platform : "android";
+  if (platform !== "android") {
+    return respondError(res, 400, "暂不支持该平台");
+  }
+
+  res.json({
+    success: true,
+    data: {
+      platform: "android",
+      latestVersion: APP_ANDROID_VERSION,
+      latestVersionCode: getAndroidVersionCode(),
+      minSupportedVersion: APP_ANDROID_MIN_SUPPORTED_VERSION,
+      downloadUrl: APP_ANDROID_DOWNLOAD_URL,
+      apkPath: APP_ANDROID_APK_PATH,
+      changelog: parseChangelog(APP_ANDROID_CHANGELOG),
+    },
+  });
 });
 
 app.post("/v1/auth/login", (req, res) => {
