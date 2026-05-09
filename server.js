@@ -21,6 +21,8 @@ const APP_ANDROID_MIN_SUPPORTED_VERSION = process.env.APP_ANDROID_MIN_SUPPORTED_
 const APP_ANDROID_DOWNLOAD_URL = process.env.APP_ANDROID_DOWNLOAD_URL || "";
 const APP_ANDROID_APK_PATH = process.env.APP_ANDROID_APK_PATH || "ocr-math-latest.apk";
 const APP_ANDROID_CHANGELOG = process.env.APP_ANDROID_CHANGELOG || "";
+const APP_ANDROID_ANNOUNCEMENT_TITLE = process.env.APP_ANDROID_ANNOUNCEMENT_TITLE || "";
+const APP_ANDROID_ANNOUNCEMENT_BODY = process.env.APP_ANDROID_ANNOUNCEMENT_BODY || "";
 
 if (!JWT_SECRET || JWT_SECRET === "change-me-to-a-random-string") {
   console.warn("WARNING: JWT_SECRET is not set or using default value. Generate a random secret.");
@@ -90,7 +92,7 @@ function parseChangelog(raw) {
 }
 
 function getAndroidVersionCode() {
-  return Number.isFinite(APP_ANDROID_VERSION_CODE) ? APP_ANDROID_VERSION_CODE : 2;
+  return Number.isFinite(APP_ANDROID_VERSION_CODE) ? APP_ANDROID_VERSION_CODE : 3;
 }
 
 // Rate limiting
@@ -171,6 +173,32 @@ app.get("/v1/app/version", (req, res) => {
       downloadUrl: APP_ANDROID_DOWNLOAD_URL,
       apkPath: APP_ANDROID_APK_PATH,
       changelog: parseChangelog(APP_ANDROID_CHANGELOG),
+    },
+  });
+});
+
+app.get("/v1/app/announcement", (req, res) => {
+  const platform = typeof req.query.platform === "string" ? req.query.platform : "android";
+  if (platform !== "android") {
+    return respondError(res, 400, "暂不支持该平台");
+  }
+
+  const title = APP_ANDROID_ANNOUNCEMENT_TITLE;
+  const body = APP_ANDROID_ANNOUNCEMENT_BODY;
+
+  if (!title && !body) {
+    return res.json({
+      success: true,
+      data: { hasAnnouncement: false },
+    });
+  }
+
+  res.json({
+    success: true,
+    data: {
+      hasAnnouncement: true,
+      title,
+      body: body.split("|").map((s) => s.trim()).filter(Boolean),
     },
   });
 });
